@@ -29,7 +29,15 @@ const FollowButton: React.FC<FollowButtonProps> = ({
     const [isFollowing, setIsFollowing] = useState(following);
     const [isHovered, setIsHovered] = useState(false);
 
-    const mutation = useFollow('index',
+    const unfollowMutation = useFollow('index',
+        noop,
+        () => {
+            setIsFollowing(false);
+            onUnfollow();
+        }
+    );
+
+    const followMutation = useFollow('index',
         noop,
         () => {
             setIsFollowing(false);
@@ -41,11 +49,11 @@ const FollowButton: React.FC<FollowButtonProps> = ({
         if (isFollowing) {
             setIsFollowing(false);
             onUnfollow();
-            // @TODO: Implement unfollow mutation
+            unfollowMutation.mutate(handle);
         } else {
             setIsFollowing(true);
             onFollow();
-            mutation.mutate(handle);
+            followMutation.mutate(handle);
         }
     };
 
